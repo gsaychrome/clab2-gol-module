@@ -1,20 +1,28 @@
 "use strict";
+import GameController = Clab2.Golapi.GameController;
+import GameRestClient = Clab2.Golapi.GameRestClient;
 
-var module: angular.IModule = angular.module("Clab2.Gol", ["ngRoute", "Clab2.Component", "ngDraggable", "ngAnimate", "ui.bootstrap", "pascalprecht.translate"]);
+var module: angular.IModule = angular.module("Clab2.Golapi", ["ngRoute", "Clab2.Component", "ngDraggable", "ngAnimate", "ui.bootstrap", "pascalprecht.translate"]);
 
 declare var modules: Array<string>;
 modules.push(module.name);
 
-//module.controller("golController", ["$rootScope", "menuRestClient", "$location", "settings", "$state", "$stateParams", "httpProxy", "userRestClient", "config", "imageGalleryRestClient", "$q", "$filter", CmsController]);
+module.provider("gameRestClient", ["settingsProvider", function(settings : Clab2.ISettingsProvider) {
+    return {
+        $get: ["httpProxy", function(httpProxy : Clab2.Http.IProxy) : GameRestClient {
+            return new GameRestClient(httpProxy, settings.endPointBase);
+        }]
+    }
+}]);
 
-// module.component("livingSpace", {
-//     templateUrl: ["settings", function (settings: Clab2.ISettings) {
-//         return settings.getModuleSettings("clab2-cms-module").createTemplateURL("group-box.html");
-//     }],
-//     controller: ["menuRestClient", "settings", "$rootScope", Clab2.Cms.GroupBoxController],
-//     bindings: {
-//         "template": "@",
-//         "count": "@",
-//         "groupCode": "@"
-//     }
-// });
+module.controller("gameController", ["gameRestClient", "settings", GameController]);
+
+module.component("livingSpace", {
+    templateUrl: ["settings", function (settings: Clab2.ISettings) {
+        return settings.getModuleSettings("clab2-gol-module").createTemplateURL("living-space.html");
+    }],
+    controller: ["gameRestClient", "settings", GameController],
+    bindings: {
+        "template": "@"
+    }
+});
