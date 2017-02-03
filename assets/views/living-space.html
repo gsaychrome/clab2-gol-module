@@ -1,6 +1,9 @@
 <div class="gol-living">
     <div class="gol-living-controll">
+        <div><span>Width: </span><input type="text" data-ng-model="$ctrl.width" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div><span>Height: </span><input type="text" data-ng-model="$ctrl.height" data-ng-disabled="$ctrl.isRunning" /></div>
         <div><span>Step: </span><input type="text" value="{{$ctrl.space.step}}" data-ng-click="$ctrl.step()" disabled="disabled" /></div>
+        <div><input data-ng-if="$ctrl.isChanged" type="button" value="set size" data-ng-click="$ctrl.setSize()" data-ng-disabled="$ctrl.isRunning" /></div>
         <div><input type="button" value="step" data-ng-click="$ctrl.step()" data-ng-disabled="$ctrl.isRunning" /></div>
         <div><input data-ng-if="!$ctrl.isRunning" type="button" value="start" data-ng-click="$ctrl.startIteration()" /></div>
         <div><input data-ng-if="$ctrl.isRunning" type="button" value="stop" data-ng-click="$ctrl.stopIteration()" /></div>

@@ -6,9 +6,14 @@ declare namespace Clab2.Golapi {
         private _space;
         private _running;
         private _timer;
+        private _change;
         constructor(gameService: Clab2.Golapi.IGameRestClient, settings: Clab2.ISettings);
         space: ILivingSpace;
         isRunning: boolean;
+        width: number;
+        height: number;
+        isChanged: boolean;
+        setSize(): void;
         step(): void;
         startIteration(): void;
         stopIteration(): void;

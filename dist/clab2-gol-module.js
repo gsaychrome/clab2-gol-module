@@ -13,8 +13,10 @@ var Clab2;
                 var _this = this;
                 this.gameService = gameService;
                 this.settings = settings;
+                this._space = null;
                 this._running = false;
                 this._timer = null;
+                this._change = false;
                 this.gameService.init().then(function (response) {
                     _this._space = response;
                 });
@@ -33,6 +35,60 @@ var Clab2;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(GameController.prototype, "width", {
+                get: function () {
+                    return this._space == null ? 0 : this._space.width;
+                },
+                set: function (w) {
+                    if (this._space == null) {
+                        return;
+                    }
+                    this._space.width = w;
+                    this._change = true;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GameController.prototype, "height", {
+                get: function () {
+                    return this._space == null ? 0 : this._space.height;
+                },
+                set: function (h) {
+                    if (this._space == null) {
+                        return;
+                    }
+                    this._space.height = h;
+                    this._change = true;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GameController.prototype, "isChanged", {
+                get: function () {
+                    return this._change;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            GameController.prototype.setSize = function () {
+                if (this._space == null) {
+                    return;
+                }
+                var cells = [];
+                for (var i = 0; i < this._space.height; i++) {
+                    cells.push([]);
+                    for (var j = 0; j < this._space.width; j++) {
+                        if (i < this._space.cells.length && j < this._space.cells[i].length) {
+                            cells[i].push(this._space.cells[i][j]);
+                        }
+                        else {
+                            cells[i].push(0);
+                        }
+                    }
+                }
+                this._space.cells = cells;
+                this._change = false;
+            };
             GameController.prototype.step = function () {
                 var _this = this;
                 var self = this;
