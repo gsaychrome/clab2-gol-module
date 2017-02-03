@@ -28,5 +28,14 @@ namespace Clab2.Golapi
 			);
 		}
 
+		public start() {
+
+		}
+
+		public toggle(i: number, j: number) {
+			if(i>=0&&i<this._space.height&&j>=0&&j<this._space.width) {
+				this._space.cells[i][j] = this._space.cells[i][j] == 0 ? 1 : 0;
+			}
+		}
 	}
 }

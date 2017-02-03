@@ -7,6 +7,8 @@ declare namespace Clab2.Golapi {
         constructor(gameService: Clab2.Golapi.IGameRestClient, settings: Clab2.ISettings);
         space: ILivingSpace;
         step(): void;
+        start(): void;
+        toggle(i: number, j: number): void;
     }
 }
 declare namespace Clab2.Golapi {

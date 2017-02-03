@@ -30,6 +30,13 @@ var Clab2;
                     _this._space = response;
                 });
             };
+            GameController.prototype.start = function () {
+            };
+            GameController.prototype.toggle = function (i, j) {
+                if (i >= 0 && i < this._space.height && j >= 0 && j < this._space.width) {
+                    this._space.cells[i][j] = this._space.cells[i][j] == 0 ? 1 : 0;
+                }
+            };
             return GameController;
         }());
         Golapi.GameController = GameController;

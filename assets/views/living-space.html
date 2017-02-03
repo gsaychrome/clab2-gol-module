@@ -1,9 +1,14 @@
-<div class="gol-living-controll">
-    <input type="button" value="step" data-ng-click="$ctrl.step()" />
-    <input type="button" value="start" data-ng-click="$ctrl.start()" />
+<div class="gol-living">
+    <div class="gol-living-controll">
+        <div><span>Step: </span><input type="text" value="{{$ctrl.space.step}}" data-ng-click="$ctrl.step()" disabled="disabled" /></div>
+        <div><input type="button" value="step" data-ng-click="$ctrl.step()" /></div>
+        <div><input type="button" value="start" data-ng-click="$ctrl.start()" /></div>
+    </div>
+    <div class="gol-living-space">
+        <table cellspacing="1">
+            <tr data-ng-repeat="(i,crow) in $ctrl.space.cells track by $index">
+                <td data-ng-repeat="(j,c) in crow track by $index" data-ng-class="c==1 ? 'live' : ''" data-ng-click="$ctrl.toggle(i, j)"></td>
+            </tr>
+        </table>
+    </div>
 </div>
-<table class="gol-living-space" cellspacing="1">
-    <tr data-ng-repeat="crow in $ctrl.space.cells track by $index">
-        <td data-ng-repeat="c in crow track by $index" data-ng-class="c==1 ? 'live' : ''"></td>
-    </tr>
-</table>
