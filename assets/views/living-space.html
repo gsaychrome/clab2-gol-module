@@ -1,11 +1,12 @@
 <div class="gol-living">
     <div class="gol-living-controll">
         <div><span>Step: </span><input type="text" value="{{$ctrl.space.step}}" data-ng-click="$ctrl.step()" disabled="disabled" /></div>
-        <div><input type="button" value="step" data-ng-click="$ctrl.step()" /></div>
-        <div><input type="button" value="start" data-ng-click="$ctrl.start()" /></div>
+        <div><input type="button" value="step" data-ng-click="$ctrl.step()" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div><input data-ng-if="!$ctrl.isRunning" type="button" value="start" data-ng-click="$ctrl.startIteration()" /></div>
+        <div><input data-ng-if="$ctrl.isRunning" type="button" value="stop" data-ng-click="$ctrl.stopIteration()" /></div>
     </div>
     <div class="gol-living-space">
-        <table cellspacing="1">
+        <table cellspacing="1" data-ng-class="$ctrl.isRunning ? 'running' : ''">
             <tr data-ng-repeat="(i,crow) in $ctrl.space.cells track by $index">
                 <td data-ng-repeat="(j,c) in crow track by $index" data-ng-class="c==1 ? 'live' : ''" data-ng-click="$ctrl.toggle(i, j)"></td>
             </tr>

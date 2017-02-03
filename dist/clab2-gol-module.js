@@ -13,6 +13,8 @@ var Clab2;
                 var _this = this;
                 this.gameService = gameService;
                 this.settings = settings;
+                this._running = false;
+                this._timer = null;
                 this.gameService.init().then(function (response) {
                     _this._space = response;
                 });
@@ -24,15 +26,41 @@ var Clab2;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(GameController.prototype, "isRunning", {
+                get: function () {
+                    return this._running;
+                },
+                enumerable: true,
+                configurable: true
+            });
             GameController.prototype.step = function () {
                 var _this = this;
+                var self = this;
+                clearTimeout(this._timer);
                 this.gameService.next(this._space).then(function (response) {
                     _this._space = response;
+                    if (_this._running) {
+                        _this._timer = setTimeout(function () {
+                            self.step();
+                        }, 1);
+                    }
                 });
             };
-            GameController.prototype.start = function () {
+            GameController.prototype.startIteration = function () {
+                if (this._running) {
+                    return;
+                }
+                this._running = true;
+                this.step();
+            };
+            GameController.prototype.stopIteration = function () {
+                this._running = false;
+                clearTimeout(this._timer);
             };
             GameController.prototype.toggle = function (i, j) {
+                if (this._running) {
+                    return;
+                }
                 if (i >= 0 && i < this._space.height && j >= 0 && j < this._space.width) {
                     this._space.cells[i][j] = this._space.cells[i][j] == 0 ? 1 : 0;
                 }
