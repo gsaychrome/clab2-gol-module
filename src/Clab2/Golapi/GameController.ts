@@ -2,13 +2,18 @@
 
 namespace Clab2.Golapi {
     import ILivingSpace = Clab2.Golapi.Model.ILivingSpace;
+    import createLoadingData = Clab2.Golapi.Model.createLoadingData;
     export class GameController {
         private _space:ILivingSpace = null;
         private _running:boolean = false;
         private _timer = null;
         private _change:boolean = false;
+        public selectedExample: string;
+        public examples: Array<string>;
+
 
         public constructor(private gameService:Clab2.Golapi.IGameRestClient,
+                           private spaceService:Clab2.Golapi.ILivingSpaceRestClient,
                            private settings:Clab2.ISettings) {
 
             this.gameService.init().then(
@@ -16,6 +21,12 @@ namespace Clab2.Golapi {
                     this._space = response;
                 }
             );
+            this.spaceService.samples().then(
+                (response) => {
+                    this.examples = response;
+                }
+            );
+
         }
 
         public get space() {
@@ -108,6 +119,20 @@ namespace Clab2.Golapi {
             }
             if (i >= 0 && i < this._space.height && j >= 0 && j < this._space.width) {
                 this._space.cells[i][j] = this._space.cells[i][j] == 0 ? 1 : 0;
+            }
+        }
+
+        public load() {
+            if(this.selectedExample+''!='undefined') {
+                var data = Clab2.Golapi.Model.createLoadingData();
+                data.name = this.selectedExample;
+                data.height = this._space.height;
+                data.width = this._space.width;
+                this.spaceService.load(data).then(
+                    (response) => {
+                        this._space = response;
+                    }
+                );
             }
         }
     }

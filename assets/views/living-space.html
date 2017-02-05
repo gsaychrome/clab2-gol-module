@@ -7,6 +7,16 @@
         <div><input type="button" value="step" data-ng-click="$ctrl.step()" data-ng-disabled="$ctrl.isRunning" /></div>
         <div><input data-ng-if="!$ctrl.isRunning" type="button" value="start" data-ng-click="$ctrl.startIteration()" /></div>
         <div><input data-ng-if="$ctrl.isRunning" type="button" value="stop" data-ng-click="$ctrl.stopIteration()" /></div>
+
+        <div>&nbsp;</div>
+        <div><span>Example:</span></div>
+        <div>
+            <select data-ng-model="$ctrl.selectedExample">
+                <option ng-repeat="option in $ctrl.examples" value="{{option}}">{{option}}</option>
+            </select>
+        </div>
+        <div><input type="button" value="load" data-ng-click="$ctrl.load()" data-ng-disabled="$ctrl.isRunning" /></div>
+
     </div>
     <div class="gol-living-space">
         <table cellspacing="1" data-ng-class="$ctrl.isRunning ? 'running' : ''">

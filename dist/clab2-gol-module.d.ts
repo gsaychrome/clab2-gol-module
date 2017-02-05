@@ -2,12 +2,15 @@ declare namespace Clab2.Golapi {
     import ILivingSpace = Clab2.Golapi.Model.ILivingSpace;
     class GameController {
         private gameService;
+        private spaceService;
         private settings;
         private _space;
         private _running;
         private _timer;
         private _change;
-        constructor(gameService: Clab2.Golapi.IGameRestClient, settings: Clab2.ISettings);
+        selectedExample: string;
+        examples: Array<string>;
+        constructor(gameService: Clab2.Golapi.IGameRestClient, spaceService: Clab2.Golapi.ILivingSpaceRestClient, settings: Clab2.ISettings);
         space: ILivingSpace;
         isRunning: boolean;
         width: number;
@@ -18,6 +21,7 @@ declare namespace Clab2.Golapi {
         startIteration(): void;
         stopIteration(): void;
         toggle(i: number, j: number): void;
+        load(): void;
     }
 }
 declare namespace Clab2.Golapi {
@@ -30,8 +34,20 @@ declare namespace Clab2.Golapi {
         "init"(): angular.IPromise<Clab2.Golapi.Model.ILivingSpace>;
     }
 }
+declare namespace Clab2.Golapi {
+    interface ILivingSpaceRestClient {
+        "load"(space?: any): angular.IPromise<Clab2.Golapi.Model.ILivingSpace>;
+        "samples"(): angular.IPromise<Array<any>>;
+    }
+    class LivingSpaceRestClient extends Clab2.Http.RestClient implements ILivingSpaceRestClient {
+        "load"(space?: any): angular.IPromise<Clab2.Golapi.Model.ILivingSpace>;
+        "samples"(): angular.IPromise<Array<any>>;
+    }
+}
 import GameController = Clab2.Golapi.GameController;
 import GameRestClient = Clab2.Golapi.GameRestClient;
+import ILivingSpaceRestClient = Clab2.Golapi.ILivingSpaceRestClient;
+import LivingSpaceRestClient = Clab2.Golapi.LivingSpaceRestClient;
 declare var module: angular.IModule;
 declare var modules: Array<string>;
 declare namespace Clab2.Golapi.Model {
@@ -42,4 +58,12 @@ declare namespace Clab2.Golapi.Model {
         cells?: Array<any>;
     }
     function createLivingSpace(): ILivingSpace;
+}
+declare namespace Clab2.Golapi.Model {
+    interface ILoadingData {
+        name?: string;
+        width?: number;
+        height?: number;
+    }
+    function createLoadingData(): ILoadingData;
 }

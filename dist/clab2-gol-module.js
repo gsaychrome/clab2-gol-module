@@ -9,9 +9,10 @@ var Clab2;
     var Golapi;
     (function (Golapi) {
         var GameController = (function () {
-            function GameController(gameService, settings) {
+            function GameController(gameService, spaceService, settings) {
                 var _this = this;
                 this.gameService = gameService;
+                this.spaceService = spaceService;
                 this.settings = settings;
                 this._space = null;
                 this._running = false;
@@ -19,6 +20,9 @@ var Clab2;
                 this._change = false;
                 this.gameService.init().then(function (response) {
                     _this._space = response;
+                });
+                this.spaceService.samples().then(function (response) {
+                    _this.examples = response;
                 });
             }
             Object.defineProperty(GameController.prototype, "space", {
@@ -121,6 +125,18 @@ var Clab2;
                     this._space.cells[i][j] = this._space.cells[i][j] == 0 ? 1 : 0;
                 }
             };
+            GameController.prototype.load = function () {
+                var _this = this;
+                if (this.selectedExample + '' != 'undefined') {
+                    var data = Clab2.Golapi.Model.createLoadingData();
+                    data.name = this.selectedExample;
+                    data.height = this._space.height;
+                    data.width = this._space.width;
+                    this.spaceService.load(data).then(function (response) {
+                        _this._space = response;
+                    });
+                }
+            };
             return GameController;
         }());
         Golapi.GameController = GameController;
@@ -148,8 +164,30 @@ var Clab2;
     })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
 })(Clab2 || (Clab2 = {}));
 "use strict";
+var Clab2;
+(function (Clab2) {
+    var Golapi;
+    (function (Golapi) {
+        var LivingSpaceRestClient = (function (_super) {
+            __extends(LivingSpaceRestClient, _super);
+            function LivingSpaceRestClient() {
+                _super.apply(this, arguments);
+            }
+            LivingSpaceRestClient.prototype["load"] = function (space) {
+                return this.http.post(this.buildURL("/golapi/space/load"), space);
+            };
+            LivingSpaceRestClient.prototype["samples"] = function () {
+                return this.http.get(this.buildURL("/golapi/space/samples"));
+            };
+            return LivingSpaceRestClient;
+        }(Clab2.Http.RestClient));
+        Golapi.LivingSpaceRestClient = LivingSpaceRestClient;
+    })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
+})(Clab2 || (Clab2 = {}));
+"use strict";
 var GameController = Clab2.Golapi.GameController;
 var GameRestClient = Clab2.Golapi.GameRestClient;
+var LivingSpaceRestClient = Clab2.Golapi.LivingSpaceRestClient;
 var module = angular.module("Clab2.Golapi", ["ngRoute", "Clab2.Component", "ngDraggable", "ngAnimate", "ui.bootstrap", "pascalprecht.translate"]);
 modules.push(module.name);
 module.provider("gameRestClient", ["settingsProvider", function (settings) {
@@ -159,12 +197,19 @@ module.provider("gameRestClient", ["settingsProvider", function (settings) {
                 }]
         };
     }]);
-module.controller("gameController", ["gameRestClient", "settings", GameController]);
+module.provider("spaceRestClient", ["settingsProvider", function (settings) {
+        return {
+            $get: ["httpProxy", function (httpProxy) {
+                    return new LivingSpaceRestClient(httpProxy, settings.endPointBase);
+                }]
+        };
+    }]);
+module.controller("gameController", ["gameRestClient", "spaceRestClient", "settings", GameController]);
 module.component("livingSpace", {
     templateUrl: ["settings", function (settings) {
             return settings.getModuleSettings("clab2-gol-module").createTemplateURL("living-space.html");
         }],
-    controller: ["gameRestClient", "settings", GameController],
+    controller: ["gameRestClient", "spaceRestClient", "settings", GameController],
     bindings: {
         "template": "@"
     }
@@ -185,6 +230,24 @@ var Clab2;
                 };
             }
             Model.createLivingSpace = createLivingSpace;
+        })(Model = Golapi.Model || (Golapi.Model = {}));
+    })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
+})(Clab2 || (Clab2 = {}));
+"use strict";
+var Clab2;
+(function (Clab2) {
+    var Golapi;
+    (function (Golapi) {
+        var Model;
+        (function (Model) {
+            function createLoadingData() {
+                return {
+                    name: null,
+                    width: null,
+                    height: null
+                };
+            }
+            Model.createLoadingData = createLoadingData;
         })(Model = Golapi.Model || (Golapi.Model = {}));
     })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
 })(Clab2 || (Clab2 = {}));
