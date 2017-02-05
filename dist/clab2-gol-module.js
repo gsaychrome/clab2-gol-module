@@ -192,20 +192,12 @@ var Clab2;
             GameController.prototype.cancelSaveAs = function () {
                 this.saveByName = false;
             };
-            Object.defineProperty(GameController.prototype, "exampleIsSelected", {
-                get: function () {
-                    return typeof this.selectedExample != 'undefined';
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(GameController.prototype, "spaceIsSelected", {
-                get: function () {
-                    return typeof this.selectedSpace != 'undefined';
-                },
-                enumerable: true,
-                configurable: true
-            });
+            GameController.prototype.exampleIsSelected = function () {
+                return typeof this.selectedExample != 'undefined';
+            };
+            GameController.prototype.spaceIsSelected = function () {
+                return typeof this.selectedSpace != 'undefined';
+            };
             return GameController;
         }());
         Golapi.GameController = GameController;

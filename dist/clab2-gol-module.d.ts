@@ -34,8 +34,8 @@ declare namespace Clab2.Golapi {
         saveAs(): void;
         save(): void;
         cancelSaveAs(): void;
-        exampleIsSelected: boolean;
-        spaceIsSelected: boolean;
+        exampleIsSelected(): boolean;
+        spaceIsSelected(): boolean;
     }
 }
 declare namespace Clab2.Golapi {

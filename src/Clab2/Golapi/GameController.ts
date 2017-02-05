@@ -205,11 +205,11 @@ namespace Clab2.Golapi {
             this.saveByName = false;
         }
 
-        public get exampleIsSelected() {
+        public exampleIsSelected() {
             return typeof this.selectedExample!='undefined';
         }
 
-        public get spaceIsSelected() {
+        public spaceIsSelected() {
             return typeof this.selectedSpace!='undefined';
         }
     }
