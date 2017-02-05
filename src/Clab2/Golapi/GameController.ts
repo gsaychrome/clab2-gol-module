@@ -136,7 +136,7 @@ namespace Clab2.Golapi {
         }
 
         public load() {
-            if(this.selectedExample+''!='undefined') {
+            if(typeof this.selectedExample!='undefined') {
                 var data = Clab2.Golapi.Model.createLoadingData();
                 data.name = this.selectedExample;
                 data.height = this._space.height;
@@ -150,7 +150,7 @@ namespace Clab2.Golapi {
         }
 
         public open() {
-            if(this.selectedSpace+''!='undefined') {
+            if(typeof this.selectedSpace!='undefined') {
                 this.spaceService.get(this.selectedSpace).then(
                     (response) => {
                         this._space = response;
@@ -174,7 +174,7 @@ namespace Clab2.Golapi {
         }
 
         protected getSelectedSpace() {
-            if(this.selectedSpace+''!='undefined') {
+            if(typeof this.selectedSpace!='undefined') {
                 for(var i=0;i<this.spaces.length;i++) {
                     if(this.spaces[i].id = this.selectedSpace) {
                         return this.spaces[i];
@@ -185,7 +185,7 @@ namespace Clab2.Golapi {
         }
 
         public saveAs() {
-            if(this.name+''!='undefined') {
+            if(typeof this.name!='undefined') {
                 this._space.id = null;
                 this._space.name = this.name;
                 this.saveData();
@@ -193,7 +193,7 @@ namespace Clab2.Golapi {
         }
 
         public save() {
-            if(this.selectedSpace+''!='undefined') {
+            if(typeof this.selectedSpace!='undefined') {
                 var space = this.getSelectedSpace();
                 this._space.id = space.id;
                 this._space.name = space.name;
@@ -206,11 +206,11 @@ namespace Clab2.Golapi {
         }
 
         public get exampleIsSelected() {
-            return this.selectedExample+''!='undefined';
+            return typeof this.selectedExample!='undefined';
         }
 
         public get spaceIsSelected() {
-            return this.selectedSpace+''!='undefined';
+            return typeof this.selectedSpace!='undefined';
         }
     }
 }

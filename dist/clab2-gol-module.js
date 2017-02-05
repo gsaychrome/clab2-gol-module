@@ -135,7 +135,7 @@ var Clab2;
             };
             GameController.prototype.load = function () {
                 var _this = this;
-                if (this.selectedExample + '' != 'undefined') {
+                if (typeof this.selectedExample != 'undefined') {
                     var data = Clab2.Golapi.Model.createLoadingData();
                     data.name = this.selectedExample;
                     data.height = this._space.height;
@@ -147,7 +147,7 @@ var Clab2;
             };
             GameController.prototype.open = function () {
                 var _this = this;
-                if (this.selectedSpace + '' != 'undefined') {
+                if (typeof this.selectedSpace != 'undefined') {
                     this.spaceService.get(this.selectedSpace).then(function (response) {
                         _this._space = response;
                     });
@@ -165,7 +165,7 @@ var Clab2;
                 });
             };
             GameController.prototype.getSelectedSpace = function () {
-                if (this.selectedSpace + '' != 'undefined') {
+                if (typeof this.selectedSpace != 'undefined') {
                     for (var i = 0; i < this.spaces.length; i++) {
                         if (this.spaces[i].id = this.selectedSpace) {
                             return this.spaces[i];
@@ -175,14 +175,14 @@ var Clab2;
                 return null;
             };
             GameController.prototype.saveAs = function () {
-                if (this.name + '' != 'undefined') {
+                if (typeof this.name != 'undefined') {
                     this._space.id = null;
                     this._space.name = this.name;
                     this.saveData();
                 }
             };
             GameController.prototype.save = function () {
-                if (this.selectedSpace + '' != 'undefined') {
+                if (typeof this.selectedSpace != 'undefined') {
                     var space = this.getSelectedSpace();
                     this._space.id = space.id;
                     this._space.name = space.name;
@@ -194,14 +194,14 @@ var Clab2;
             };
             Object.defineProperty(GameController.prototype, "exampleIsSelected", {
                 get: function () {
-                    return this.selectedExample + '' != 'undefined';
+                    return typeof this.selectedExample != 'undefined';
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(GameController.prototype, "spaceIsSelected", {
                 get: function () {
-                    return this.selectedSpace + '' != 'undefined';
+                    return typeof this.selectedSpace != 'undefined';
                 },
                 enumerable: true,
                 configurable: true
