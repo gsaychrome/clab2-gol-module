@@ -3,13 +3,18 @@
 namespace Clab2.Golapi {
     import ILivingSpace = Clab2.Golapi.Model.ILivingSpace;
     import createLoadingData = Clab2.Golapi.Model.createLoadingData;
+
     export class GameController {
         private _space:ILivingSpace = null;
         private _running:boolean = false;
         private _timer = null;
         private _change:boolean = false;
         public selectedExample: string;
+        public selectedSpace: number;
         public examples: Array<string>;
+        public spaces: Array<ILivingSpace>;
+        public name : string;
+        public saveByName : boolean = false;
 
 
         public constructor(private gameService:Clab2.Golapi.IGameRestClient,
@@ -26,7 +31,15 @@ namespace Clab2.Golapi {
                     this.examples = response;
                 }
             );
+            this.refreshSavedSpaces();
+        }
 
+        public refreshSavedSpaces() {
+            this.spaceService.saved().then(
+                (response) => {
+                    this.spaces = response;
+                }
+            );
         }
 
         public get space() {
@@ -134,6 +147,70 @@ namespace Clab2.Golapi {
                     }
                 );
             }
+        }
+
+        public open() {
+            if(this.selectedSpace+''!='undefined') {
+                this.spaceService.get(this.selectedSpace).then(
+                    (response) => {
+                        this._space = response;
+                    }
+                );
+            }
+        }
+
+        public saveName() {
+            this.saveByName = true;
+        }
+
+        protected saveData() {
+            this.spaceService.save(this._space).then(
+                (response) => {
+                    this._space = response;
+                    this.saveByName = false;
+                    this.refreshSavedSpaces();
+                }
+            );
+        }
+
+        protected getSelectedSpace() {
+            if(this.selectedSpace+''!='undefined') {
+                for(var i=0;i<this.spaces.length;i++) {
+                    if(this.spaces[i].id = this.selectedSpace) {
+                        return this.spaces[i];
+                    }
+                }
+            }
+            return null;
+        }
+
+        public saveAs() {
+            if(this.name+''!='undefined') {
+                this._space.id = null;
+                this._space.name = this.name;
+                this.saveData();
+            }
+        }
+
+        public save() {
+            if(this.selectedSpace+''!='undefined') {
+                var space = this.getSelectedSpace();
+                this._space.id = space.id;
+                this._space.name = space.name;
+                this.saveData();
+            }
+        }
+
+        public cancelSaveAs() {
+            this.saveByName = false;
+        }
+
+        public get exampleIsSelected() {
+            return this.selectedExample+''!='undefined';
+        }
+
+        public get spaceIsSelected() {
+            return this.selectedSpace+''!='undefined';
         }
     }
 }

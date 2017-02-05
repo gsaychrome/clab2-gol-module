@@ -18,13 +18,21 @@ var Clab2;
                 this._running = false;
                 this._timer = null;
                 this._change = false;
+                this.saveByName = false;
                 this.gameService.init().then(function (response) {
                     _this._space = response;
                 });
                 this.spaceService.samples().then(function (response) {
                     _this.examples = response;
                 });
+                this.refreshSavedSpaces();
             }
+            GameController.prototype.refreshSavedSpaces = function () {
+                var _this = this;
+                this.spaceService.saved().then(function (response) {
+                    _this.spaces = response;
+                });
+            };
             Object.defineProperty(GameController.prototype, "space", {
                 get: function () {
                     return this._space;
@@ -137,6 +145,67 @@ var Clab2;
                     });
                 }
             };
+            GameController.prototype.open = function () {
+                var _this = this;
+                if (this.selectedSpace + '' != 'undefined') {
+                    this.spaceService.get(this.selectedSpace).then(function (response) {
+                        _this._space = response;
+                    });
+                }
+            };
+            GameController.prototype.saveName = function () {
+                this.saveByName = true;
+            };
+            GameController.prototype.saveData = function () {
+                var _this = this;
+                this.spaceService.save(this._space).then(function (response) {
+                    _this._space = response;
+                    _this.saveByName = false;
+                    _this.refreshSavedSpaces();
+                });
+            };
+            GameController.prototype.getSelectedSpace = function () {
+                if (this.selectedSpace + '' != 'undefined') {
+                    for (var i = 0; i < this.spaces.length; i++) {
+                        if (this.spaces[i].id = this.selectedSpace) {
+                            return this.spaces[i];
+                        }
+                    }
+                }
+                return null;
+            };
+            GameController.prototype.saveAs = function () {
+                if (this.name + '' != 'undefined') {
+                    this._space.id = null;
+                    this._space.name = this.name;
+                    this.saveData();
+                }
+            };
+            GameController.prototype.save = function () {
+                if (this.selectedSpace + '' != 'undefined') {
+                    var space = this.getSelectedSpace();
+                    this._space.id = space.id;
+                    this._space.name = space.name;
+                    this.saveData();
+                }
+            };
+            GameController.prototype.cancelSaveAs = function () {
+                this.saveByName = false;
+            };
+            Object.defineProperty(GameController.prototype, "exampleIsSelected", {
+                get: function () {
+                    return this.selectedExample + '' != 'undefined';
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GameController.prototype, "spaceIsSelected", {
+                get: function () {
+                    return this.selectedSpace + '' != 'undefined';
+                },
+                enumerable: true,
+                configurable: true
+            });
             return GameController;
         }());
         Golapi.GameController = GameController;
@@ -178,6 +247,15 @@ var Clab2;
             };
             LivingSpaceRestClient.prototype["samples"] = function () {
                 return this.http.get(this.buildURL("/golapi/space/samples"));
+            };
+            LivingSpaceRestClient.prototype["saved"] = function () {
+                return this.http.get(this.buildURL("/golapi/space/saved"));
+            };
+            LivingSpaceRestClient.prototype["get"] = function (id) {
+                return this.http.get(this.buildURL("/golapi/space/get/" + id));
+            };
+            LivingSpaceRestClient.prototype["save"] = function (space) {
+                return this.http.post(this.buildURL("/golapi/space/save"), space);
             };
             return LivingSpaceRestClient;
         }(Clab2.Http.RestClient));
@@ -223,6 +301,9 @@ var Clab2;
         (function (Model) {
             function createLivingSpace() {
                 return {
+                    id: null,
+                    name: null,
+                    description: null,
                     step: null,
                     width: null,
                     height: null,
@@ -248,6 +329,24 @@ var Clab2;
                 };
             }
             Model.createLoadingData = createLoadingData;
+        })(Model = Golapi.Model || (Golapi.Model = {}));
+    })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
+})(Clab2 || (Clab2 = {}));
+"use strict";
+var Clab2;
+(function (Clab2) {
+    var Golapi;
+    (function (Golapi) {
+        var Model;
+        (function (Model) {
+            function createRestListLivingSpace() {
+                return {
+                    id: null,
+                    name: null,
+                    savedOn: null
+                };
+            }
+            Model.createRestListLivingSpace = createRestListLivingSpace;
         })(Model = Golapi.Model || (Golapi.Model = {}));
     })(Golapi = Clab2.Golapi || (Clab2.Golapi = {}));
 })(Clab2 || (Clab2 = {}));

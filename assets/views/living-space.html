@@ -15,7 +15,23 @@
                 <option ng-repeat="option in $ctrl.examples" value="{{option}}">{{option}}</option>
             </select>
         </div>
-        <div><input type="button" value="load" data-ng-click="$ctrl.load()" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div data-ng-if="$ctrl.exampleIsSelected"><input type="button" value="load" data-ng-click="$ctrl.load()" data-ng-disabled="$ctrl.isRunning" /></div>
+
+        <div>&nbsp;</div>
+        <div><span>Saved data:</span></div>
+        <div data-ng-if="!$ctrl.saveByName">
+            <select data-ng-model="$ctrl.selectedSpace">
+                <option ng-repeat="space in $ctrl.spaces" value="{{space.id}}">{{space.name}} [{{1000*space.savedOn| date:'yyyy-MM-dd HH:mm:ss'}}]</option>
+            </select>
+        </div>
+        <div data-ng-if="!$ctrl.saveByName&&$ctrl.spaceIsSelected"><input type="button" value="load" data-ng-click="$ctrl.open()" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div data-ng-if="!$ctrl.saveByName&&$ctrl.spaceIsSelected"><input type="button" value="save" data-ng-click="$ctrl.save()" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div data-ng-if="!$ctrl.saveByName"><input type="button" value="save as" data-ng-click="$ctrl.saveName()" data-ng-disabled="$ctrl.isRunning" /></div>
+
+        <div data-ng-if="$ctrl.saveByName"><span>Name:</span></div>
+        <div data-ng-if="$ctrl.saveByName"><input class="spaceName" type="text" data-ng-model="$ctrl.name" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div data-ng-if="$ctrl.saveByName"><input type="button" value="save" data-ng-click="$ctrl.saveAs()" data-ng-disabled="$ctrl.isRunning" /></div>
+        <div data-ng-if="$ctrl.saveByName"><input type="button" value="cancel" data-ng-click="$ctrl.cancelSaveAs()" data-ng-disabled="$ctrl.isRunning" /></div>
 
     </div>
     <div class="gol-living-space">
